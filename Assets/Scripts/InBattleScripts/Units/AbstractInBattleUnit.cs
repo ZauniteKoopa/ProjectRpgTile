@@ -65,6 +65,10 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
     public abstract IEnumerator executeTurn();
 
 
+    // Main function to check if unit is an ally or not
+    public abstract bool isAlly(AbstractInBattleUnit other);
+
+
     // Main function to access a stat
     public float getStat(StatType stat) {
         float statModifier = (isResourceStatType(stat)) ? 1.0f : statEffects[stat];
