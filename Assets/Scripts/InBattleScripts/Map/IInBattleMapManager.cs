@@ -44,4 +44,16 @@ public interface IInBattleMapManager
     //  Pre: unit is the unit that you want to highlight around. Int is the radius. 
     //  Post: Will highlight the radius around the center and then return the list of Vector3Ints
     public List<Vector3Int> highlightRadius(AbstractInBattleUnit unit, int radius, Color color, bool considersCollision);
+
+
+    // Main function to get all enemy positions of a unit
+    //  Pre: unit is the unit that wants to attack, radius is how far the unit can attack, considerCollisions checks if the attack considers collisions or not
+    //  Post: returns all the grid positions that has an enemy on them
+    public List<Vector3Int> getAllPossibleEnemies(AbstractInBattleUnit unit, int radius, bool considersCollision);
+
+
+    // Main function to get the Unit that's found at a specific position
+    //  Pre: Vector3Int is a position on the map
+    //  Post: Returns the unit's that's at that location. Returns null if no unit is there
+    public AbstractInBattleUnit getUnit(Vector3Int position);
 }

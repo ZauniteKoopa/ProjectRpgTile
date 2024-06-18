@@ -160,6 +160,38 @@ public class InBattleTilemapManager : MonoBehaviour, IInBattleMapManager
     }
 
 
+    // Main function to get all enemy positions of a unit
+    //  Pre: unit is the unit that wants to attack, radius is how far the unit can attack, considerCollisions checks if the attack considers collisions or not
+    //  Post: returns all the grid positions that has an enemy on them
+    public List<Vector3Int> getAllPossibleEnemies(AbstractInBattleUnit unit, int radius, bool considersCollision) {
+        List<Vector3Int> enemyTiles = new List<Vector3Int>();
+        List<Vector3Int> targetTiles = navMesh.getAllPossibleLocations(getGridUnitPosition(unit), radius, unit, considersCollision);
+
+
+        foreach (Vector3Int tilePos in targetTiles) {
+            AbstractInBattleUnit tileUnit = arenaState[tilePos].getUnit();
+
+            if (tileUnit != null && !tileUnit.isAlly(unit)) {
+                targetTiles.Add(tilePos);
+            }
+        }
+
+        return enemyTiles;
+    }
+
+
+    // Main function to get the Unit that's found at a specific position
+    //  Pre: Vector3Int is a position on the map
+    //  Post: Returns the unit's that's at that location. Returns null if no unit is there
+    public AbstractInBattleUnit getUnit(Vector3Int position) {
+        if (!arenaState.ContainsKey(position)) {
+            return null;
+        }
+
+        return arenaState[position].getUnit();
+    }
+
+
     // Main IEnumerator to move unit along a path
     //  Pre: the path is not empty and unit is not null
     //  Post: unit is moving along a path
