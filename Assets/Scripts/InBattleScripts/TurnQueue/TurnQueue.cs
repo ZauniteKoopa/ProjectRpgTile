@@ -22,7 +22,7 @@ public class TurnQueue : MonoBehaviour
 
     // Main runtime boolean for recalculation (to avoid doing recalculations 5 times in 1 frame)
     private Coroutine currentRecalculationSequence;
-    public const int NUM_RECALC_FRAME_DELAY = 5;
+    public const int NUM_RECALC_FRAME_DELAY = 3;
 
 
     // Cached variables for the max speed of the units

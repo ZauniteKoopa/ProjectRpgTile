@@ -24,6 +24,9 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
     // Movement reduction. This is gen erally subtractive instead of multiplicative
     private int movementReduction = 0;
 
+    // Main variable for team ID. If set to -1, it is an undefined team Id
+    public int teamId = -1;
+
     private bool isActiveThisTurn = false;
 
 
@@ -48,6 +51,11 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
     public IEnumerator turnSequence() {
         isActiveThisTurn = true;
         yield return executeTurn();
+
+        // Wait a few frames before ending the turn for everything to be processed and then end it
+        for (int i = 0; i < 6; i++) {
+            yield return 0;
+        }
         tryEndTurn();      
     }
 
@@ -66,7 +74,9 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
 
 
     // Main function to check if unit is an ally or not
-    public abstract bool isAlly(AbstractInBattleUnit other);
+    public bool isAlly(AbstractInBattleUnit other) {
+        return teamId == other.teamId;
+    }
 
 
     // Main function to access a stat
