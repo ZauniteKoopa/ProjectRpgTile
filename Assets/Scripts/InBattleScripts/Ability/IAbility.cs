@@ -11,6 +11,8 @@ public abstract class IAbility : ScriptableObject
     private string abilityName = "";
     [SerializeField]
     private IAbilityDelivery abilityDelivery;
+    [SerializeField]
+    private bool heavyAbility = false;
 
 
     // Main function to apply effects over an enemy
@@ -32,5 +34,10 @@ public abstract class IAbility : ScriptableObject
 
     public string getName() {
         return abilityName;
+    }
+
+
+    public bool isHeavyAbility() {
+        return heavyAbility;
     }
 }

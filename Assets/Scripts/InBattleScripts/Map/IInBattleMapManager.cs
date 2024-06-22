@@ -6,8 +6,8 @@ public interface IInBattleMapManager
 {
     // Main function to move a unit along a path
     //  Pre: unit != null and dest is an occupiable and navigatable location on the map
-    //  Post: moves unit along the path in a sequence at a specified speed
-    public void moveUnitAlongPath(AbstractInBattleUnit unit, Vector3Int dest, float speed);
+    //  Post: moves unit along the path in a sequence at a specified speed and return if unit actually moved
+    public bool moveUnitAlongPath(AbstractInBattleUnit unit, Vector3Int dest, float speed);
 
 
     // Main function to move the unit linearly to a destination

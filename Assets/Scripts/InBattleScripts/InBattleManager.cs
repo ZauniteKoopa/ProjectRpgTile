@@ -51,6 +51,8 @@ public class InBattleManager : MonoBehaviour
             trackUnit(unit, ENEMY_TEAM_ID);
         }
 
+        InBattleTurnExecutor.mainExecutor.turnEnded.AddListener(onTurnEnd);
+
         // Start next turn
         battleActive = true;
         battleStarted.Invoke();
@@ -67,8 +69,6 @@ public class InBattleManager : MonoBehaviour
         unit.deathEvent.AddListener(deathTracker);
         deathListeners.Add(unit, deathTracker);
 
-        // Turn end listener
-        unit.endTurnEvent.AddListener(onTurnEnd);
 
         if (teamId == PLAYER_TEAM_ID) {
             numPlayersLeft++;
@@ -89,9 +89,6 @@ public class InBattleManager : MonoBehaviour
         // Death event listener
         unit.deathEvent.RemoveListener(deathListeners[unit]);
         deathListeners.Remove(unit);
-
-        // Turn event listener
-        unit.endTurnEvent.RemoveListener(onTurnEnd);
     }
 
 
@@ -121,9 +118,9 @@ public class InBattleManager : MonoBehaviour
         // Remove all listeners
         foreach(KeyValuePair<AbstractInBattleUnit, UnityAction> handler in deathListeners) {
             handler.Key.deathEvent.RemoveListener(handler.Value);
-            handler.Key.endTurnEvent.RemoveListener(onTurnEnd);
         }
 
+        InBattleTurnExecutor.mainExecutor.turnEnded.RemoveListener(onTurnEnd);
         deathListeners.Clear();
 
         // Broadcast whether or not you win or lose
@@ -142,6 +139,6 @@ public class InBattleManager : MonoBehaviour
 
     private void startNextTurn() {
         currentActiveUnit = turnQueue.getNextUnit();
-        currentActiveUnit.startTurn();
+        InBattleTurnExecutor.mainExecutor.startTurn(currentActiveUnit, true);
     }
 }

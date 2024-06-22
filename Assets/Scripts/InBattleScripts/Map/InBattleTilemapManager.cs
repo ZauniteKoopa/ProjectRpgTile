@@ -63,11 +63,16 @@ public class InBattleTilemapManager : MonoBehaviour, IInBattleMapManager
 
     // Main function to move a unit along a path
     //  Pre: unit != null and dest is an occupiable and navigatable location on the map
-    //  Post: moves unit along the path in a sequence at a specified speed
-    public void moveUnitAlongPath(AbstractInBattleUnit unit, Vector3Int dest, float speed) {
+    //  Post: moves unit along the path in a sequence at a specified speed. returns a boolean if anyone actually moved
+    public bool moveUnitAlongPath(AbstractInBattleUnit unit, Vector3Int dest, float speed) {
         Vector3Int start = getGridUnitPosition(unit);
-        Stack<Vector3Int> path = navMesh.getPath(start, dest, unit);
-        StartCoroutine(moveUnitPathSequence(unit, path, speed));
+
+        if (start != dest) {
+            Stack<Vector3Int> path = navMesh.getPath(start, dest, unit);
+            StartCoroutine(moveUnitPathSequence(unit, path, speed));
+        }
+
+        return start != dest;
     }
 
 

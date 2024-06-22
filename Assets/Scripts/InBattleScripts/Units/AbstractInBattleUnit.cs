@@ -8,9 +8,6 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
     // Event for when this unit dies
     public UnityEvent deathEvent;
 
-    // Event for which the unit has ended his turn
-    public UnityEvent endTurnEvent;
-
     // Event for which the unit has changed his speed
     public UnityEvent speedChangeEvent;
 
@@ -27,7 +24,9 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
     // Main variable for team ID. If set to -1, it is an undefined team Id
     public int teamId = -1;
 
-    private bool isActiveThisTurn = false;
+    // Main variables to keep track of moves
+    [SerializeField]
+    private List<IAbility> abilities;
 
 
 
@@ -38,34 +37,6 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
         statEffects.Add(StatType.MAGIC_DEFENSE, 1f);
         statEffects.Add(StatType.MAGIC, 1f);
         statEffects.Add(StatType.SPEED, 1f);
-    }
-    
-    
-    // Main function to start a turn
-    public void startTurn() {
-        StartCoroutine(turnSequence());
-    }
-
-    
-    // Main function to run the turn sequence
-    public IEnumerator turnSequence() {
-        isActiveThisTurn = true;
-        yield return executeTurn();
-
-        // Wait a few frames before ending the turn for everything to be processed and then end it
-        for (int i = 0; i < 6; i++) {
-            yield return 0;
-        }
-        tryEndTurn();      
-    }
-
-
-    // Private helper function to end the turn by updating the tracking variables IFF you are active this turn. If you aren't active, do nothing
-    private void tryEndTurn() {
-        if (isActiveThisTurn) {
-            isActiveThisTurn = false;
-            endTurnEvent.Invoke();
-        }
     }
 
 
@@ -114,8 +85,31 @@ public abstract class AbstractInBattleUnit : MonoBehaviour
         // If you died in the middle of your turn, invoke death event and end turn if you were active this turn
         if (!stats.isAlive()) {
             deathEvent.Invoke();
-            tryEndTurn();
         }
+    }
+
+
+    // Main function to check if a unit can use an ability
+    public bool canUseAbility(int abilityIndex) {
+        return stats.canUseSpell(abilities[abilityIndex].getManaCost());
+    }
+
+
+    // Main function to use an ability by paying the mana cost
+    public void payAbilityCost(int abilityIndex) {
+        stats.useSpell(abilities[abilityIndex].getManaCost());
+    }
+
+
+    // Main function to access an ability
+    public IAbility getAbility(int abilityIndex) {
+        return abilities[abilityIndex];
+    }
+
+
+    // Main function to get the number of abilities this unit has
+    public int getNumberOfAbilities() {
+        return abilities.Count;
     }
 
 }
